@@ -1,65 +1,36 @@
-temperaturas = [
-    [   # Ciudad 1
-        [   # Semana 1
-            {"day": "Lunes", "temp": 78},
-            {"day": "Martes", "temp": 80},
-            {"day": "Miércoles", "temp": 82},
-            {"day": "Jueves", "temp": 79},
-            {"day": "Viernes", "temp": 85},
-            {"day": "Sábado", "temp": 88},
-            {"day": "Domingo", "temp": 92}
-        ],
-        [   # Semana 2
-            {"day": "Lunes", "temp": 76},
-            {"day": "Martes", "temp": 79},
-            {"day": "Miércoles", "temp": 83},
-            {"day": "Jueves", "temp": 81},
-            {"day": "Viernes", "temp": 87},
-            {"day": "Sábado", "temp": 89},
-            {"day": "Domingo", "temp": 93}
-        ],
-        [   # Semana 3
-            {"day": "Lunes", "temp": 77},
-            {"day": "Martes", "temp": 81},
-            {"day": "Miércoles", "temp": 85},
-            {"day": "Jueves", "temp": 82},
-            {"day": "Viernes", "temp": 88},
-            {"day": "Sábado", "temp": 91},
-            {"day": "Domingo", "temp": 95}
-        ],
-        [   # Semana 4
-            {"day": "Lunes", "temp": 75},
-            {"day": "Martes", "temp": 78},
-            {"day": "Miércoles", "temp": 80},
-            {"day": "Jueves", "temp": 79},
-            {"day": "Viernes", "temp": 84},
-            {"day": "Sábado", "temp": 87},
-            {"day": "Domingo", "temp": 91}
-        ]
-    ],
-    [   # Ciudad 2
-        # ... (datos de temperatura para Ciudad 2)
-    ],
-    [   # Ciudad 3
-        # ... (datos de temperatura para Ciudad 3)
-    ]
+def calcular_temperatura_promedio(datos):
+    """
+    Calcula la temperatura promedio de cada ciudad en un período de tiempo dado.
+
+    Args:
+    datos (list): Una lista de listas que contiene los datos de temperatura para cada ciudad y semana.
+
+    Returns:
+    dict: Un diccionario donde las claves son el nombre de las ciudades y los valores son las temperaturas promedio.
+    """
+    temperatura_promedio_por_ciudad = {}  # Creamos un diccionario para almacenar los resultados
+
+    for ciudad_data in datos:
+        ciudad = ciudad_data[0]  # El primer elemento de cada lista es el nombre de la ciudad
+        temperaturas_semana = ciudad_data[1:]  # El resto de elementos son temperaturas de las semanas
+        suma_temperaturas = sum(temperaturas_semana)
+        temperatura_promedio = suma_temperaturas / len(temperaturas_semana)
+
+        # Almacenamos la temperatura promedio en el diccionario
+        temperatura_promedio_por_ciudad[ciudad] = temperatura_promedio
+
+    return temperatura_promedio_por_ciudad
+
+# Ejemplo de datos de temperaturas para 3 ciudades durante 4 semanas
+datos_temperaturas = [
+    ["Ciudad A", 25, 28, 30, 27],
+    ["Ciudad B", 22, 26, 24, 23],
+    ["Ciudad C", 30, 32, 31, 29]
 ]
 
-# Función para calcular el promedio de temperaturas para una ciudad y una semana específica
-def calcular_promedio_temperaturas(ciudad, semana):
-    suma_temp = 0
-    num_dias = len(temperaturas[ciudad][semana])  # Número de días en la semana
+# Llamamos a la función para calcular las temperaturas promedio
+temperaturas_promedio = calcular_temperatura_promedio(datos_temperaturas)
 
-    for dia in temperaturas[ciudad][semana]:
-        temperatura = dia["temp"]
-        suma_temp += temperatura
-
-    promedio_temp_semana = suma_temp / num_dias
-    return promedio_temp_semana
-
-# Calcular el promedio de temperaturas para Ciudad 1 en cada semana e imprimirlo
-ciudad = 0  # Ciudad 1
-
-for semana in range(len(temperaturas[ciudad])):
-    promedio = calcular_promedio_temperaturas(ciudad, semana)
-    print(f"Promedio de temperatura para Semana {semana + 1} en Ciudad {ciudad + 1}: {promedio} grados")
+# Imprimimos los resultados
+for ciudad, promedio in temperaturas_promedio.items():
+    print(f"La temperatura promedio en {ciudad} es {promedio} grados Celsius.")
