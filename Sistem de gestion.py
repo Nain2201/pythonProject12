@@ -10,8 +10,10 @@ class Producto:
 
 
 class Inventario:
-    def __init__(self):
+    def __init__(self, archivo):
         self.productos = []
+        self.archivo = archivo
+        self.cargar_inventario_desde_archivo()
 
     def agregar_producto(self, producto):
         for p in self.productos:
@@ -19,12 +21,14 @@ class Inventario:
                 print("Error: Ya existe un producto con ese ID.")
                 return
         self.productos.append(producto)
+        self.guardar_inventario_en_archivo()
         print("Producto añadido con éxito.")
 
     def eliminar_producto(self, id):
         for i, producto in enumerate(self.productos):
             if producto.id == id:
                 del self.productos[i]
+                self.guardar_inventario_en_archivo()
                 print("Producto eliminado.")
                 return
         print("Error: Producto no encontrado.")
@@ -36,6 +40,7 @@ class Inventario:
                     producto.cantidad = cantidad
                 if precio is not None:
                     producto.precio = precio
+                self.guardar_inventario_en_archivo()
                 print("Producto actualizado.")
                 return
         print("Error: Producto no encontrado.")
@@ -58,6 +63,25 @@ class Inventario:
         else:
             print("El inventario está vacío.")
 
+    def cargar_inventario_desde_archivo(self):
+        try:
+            with open(self.archivo, 'r') as file:
+                for line in file:
+                    id, nombre, cantidad, precio = line.strip().split(',')
+                    producto = Producto(id, nombre, int(cantidad), float(precio))
+                    self.productos.append(producto)
+        except FileNotFoundError:
+            print(f"Archivo {self.archivo} no encontrado. Se creará uno nuevo.")
+            self.guardar_inventario_en_archivo()
+
+    def guardar_inventario_en_archivo(self):
+        try:
+            with open(self.archivo, 'w') as file:
+                for producto in self.productos:
+                    file.write(f"{producto.id},{producto.nombre},{producto.cantidad},{producto.precio}\n")
+        except PermissionError:
+            print("Error: Permiso denegado para escribir en el archivo.")
+
 
 def mostrar_menu():
     print("\nMenú:")
@@ -70,7 +94,8 @@ def mostrar_menu():
 
 
 if __name__ == "__main__":
-    inventario = Inventario()
+    archivo_inventario = "inventario.txt"
+    inventario = Inventario(archivo_inventario)
 
     while True:
         mostrar_menu()
@@ -111,3 +136,4 @@ if __name__ == "__main__":
 
         else:
             print("Opción no válida. Por favor, seleccione una opción válida.")
+
